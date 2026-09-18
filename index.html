@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Karaten itsearviointi – Budo Akatemia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@600;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F2F3EF; --surface:#FFFFFF; --ink:#1B2233; --muted:#5B6270; --line:#D6D9D1;
+  --indigo:#2F4B7C; --indigo-soft:#E3E9F3; --on-indigo:#FFFFFF; --black:#15171C; --focus:#2F4B7C;
+  --serif:"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho",Georgia,"Times New Roman",serif;
+  --sans:"Zen Kaku Gothic New","Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#161A22; --surface:#1E232D; --ink:#E8EAEE; --muted:#A3A9B5; --line:#343A46;
+    --indigo:#8FA9DA; --indigo-soft:#27324A; --on-indigo:#10131A; --black:#E8EAEE; --focus:#8FA9DA;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#161A22; --surface:#1E232D; --ink:#E8EAEE; --muted:#A3A9B5; --line:#343A46;
+  --indigo:#8FA9DA; --indigo-soft:#27324A; --on-indigo:#10131A; --black:#E8EAEE; --focus:#8FA9DA;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.55}
+.wrap{max-width:760px;margin:0 auto;padding:0 20px 64px}
+
+header.top{padding:48px 0 24px}
+.club{font-size:15px;color:var(--muted);margin:0 0 10px}
+h1{font-family:var(--serif);font-weight:800;font-size:clamp(34px,7vw,52px);line-height:1.08;margin:0 0 20px;letter-spacing:-.01em}
+.obi{display:grid;grid-template-columns:2fr 2fr 3fr 3fr;height:18px;border-radius:2px;overflow:hidden;margin:0 0 6px}
+.obi span{background-image:repeating-linear-gradient(180deg,transparent 0 3px,rgba(255,255,255,.14) 3px 4px)}
+.obi-legend{display:grid;grid-template-columns:2fr 2fr 3fr 3fr;font-size:13px;color:var(--muted);margin:0 0 22px}
+.lead{max-width:62ch;margin:0 0 8px}
+.lead.small{color:var(--muted);font-size:15px}
+
+section.block{margin-top:40px}
+h2{font-family:var(--serif);font-weight:800;font-size:26px;line-height:1.2;margin:0 0 6px}
+.sub{color:var(--muted);font-size:15px;margin:0 0 16px;max-width:62ch}
+
+/* Scale */
+.scale{background:var(--surface);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.scale div{display:grid;grid-template-columns:44px 130px 1fr;gap:12px;align-items:baseline;padding:11px 16px;border-top:1px solid var(--line);font-size:15px}
+.scale div:first-child{border-top:0}
+.scale b{font-family:var(--serif);font-size:24px;color:var(--indigo);line-height:1}
+.scale strong{font-weight:700}
+.note{margin:14px 0 0;padding:12px 16px;border-left:4px solid var(--indigo);background:var(--indigo-soft);font-size:15px;border-radius:0 6px 6px 0}
+
+/* Fields */
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fields .full{grid-column:1/-1}
+label.f,.f{display:block;font-size:14px;font-weight:700;margin-bottom:5px}
+input[type=text],input[type=date],textarea{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:5px;padding:9px 11px}
+textarea{min-height:88px;resize:vertical;line-height:1.5}
+input:focus-visible,textarea:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+
+.target{border:0;padding:0;margin:0;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.target legend{font-size:14px;font-weight:700;margin-bottom:6px;padding:0}
+.target label{position:relative;cursor:pointer}
+.target input{position:absolute;opacity:0;inset:0;margin:0}
+.target .opt{display:flex;align-items:center;gap:10px;border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:10px 12px;font-size:15px;line-height:1.25;height:100%}
+.target .sw{width:28px;height:10px;border-radius:2px;flex:none;box-shadow:0 0 0 1px rgba(128,128,128,.35)}
+.target input:checked + .opt{border-color:var(--indigo);box-shadow:inset 0 0 0 1px var(--indigo);background:var(--indigo-soft)}
+.target input:focus-visible + .opt{outline:3px solid var(--focus);outline-offset:2px}
+
+/* Groups */
+.group{margin-top:34px;border-top:2px solid var(--ink);padding-top:14px}
+.ghead{display:flex;justify-content:space-between;align-items:baseline;gap:16px}
+.ghead h3{font-family:var(--serif);font-weight:800;font-size:22px;line-height:1.25;margin:0}
+.avg{font-size:14px;color:var(--muted);white-space:nowrap}
+.avg strong{font-family:var(--serif);font-size:24px;color:var(--ink);margin-left:4px}
+.gdesc{color:var(--muted);font-size:15px;margin:4px 0 0;max-width:62ch}
+.item{padding:14px 0;border-bottom:1px solid var(--line)}
+.item p{margin:0 0 9px}
+.item p .topic{font-weight:700}
+.tag{display:inline-block;font-size:12px;font-weight:700;padding:1px 7px;border-radius:3px;margin-left:8px;vertical-align:2px;background:var(--indigo);color:var(--on-indigo)}
+.grade{font-size:13px;color:var(--muted);margin-left:8px}
+
+.seg{display:grid;gap:4px;border:0;margin:0;padding:0}
+.seg legend{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.seg label{position:relative;cursor:pointer}
+.seg input{position:absolute;opacity:0;inset:0;margin:0}
+.seg span{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:40px;border:1px solid var(--line);background:var(--surface);border-radius:4px;color:var(--muted);font-weight:700;font-size:15px;line-height:1.15;padding:5px 2px;text-align:center;transition:background .12s,color .12s}
+.seg small{font-weight:500;font-size:11.5px;margin-top:2px;hyphens:auto}
+.seg label:hover span{border-color:var(--indigo);color:var(--ink)}
+.seg input:checked + span{background:var(--indigo);border-color:var(--indigo);color:var(--on-indigo)}
+.seg input:focus-visible + span{outline:3px solid var(--focus);outline-offset:2px}
+.rate{grid-template-columns:repeat(5,1fr);max-width:560px}
+.rate span{min-height:52px}
+.yn{grid-template-columns:repeat(2,96px)}
+.camps{grid-template-columns:repeat(4,64px)}
+
+.notes{margin-top:14px}
+.notes label{display:block;font-size:14px;font-weight:700;color:var(--muted);margin-bottom:5px}
+.notes textarea{min-height:72px}
+.subhead{font-family:var(--serif);font-weight:800;font-size:18px;margin:22px 0 0}
+.empty{padding:16px;border:1px dashed var(--line);border-radius:6px;color:var(--muted);font-size:15px;margin-top:12px}
+
+.q{margin-top:22px}
+.q > label.f,.q > .f{font-size:16px;font-weight:500;margin-bottom:8px}
+.hint{font-size:14px;color:var(--muted);margin:-4px 0 8px}
+.goal{display:grid;gap:10px}
+.goal label.f{font-weight:500;font-size:14px;color:var(--muted)}
+.dan{margin-top:28px;border-left:6px solid var(--black);padding:4px 0 4px 16px}
+.dan h3{font-family:var(--serif);font-size:20px;margin:0 0 4px}
+.hidden{display:none!important}
+
+/* Summary */
+.summary{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:22px}
+.overall{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.overall .big{font-family:var(--serif);font-weight:800;font-size:56px;line-height:1}
+.overall .lbl{color:var(--muted);font-size:15px}
+.bars{display:grid;gap:10px}
+.bar{display:grid;grid-template-columns:minmax(120px,210px) 1fr 42px;align-items:center;gap:12px;font-size:14px}
+.track{height:12px;background:var(--paper);border:1px solid var(--line);border-radius:2px;position:relative;overflow:hidden}
+.track i{position:absolute;left:0;top:0;bottom:0;background:var(--indigo);width:0;transition:width .25s}
+.track::after{content:"";position:absolute;left:50%;top:-2px;bottom:-2px;border-left:1px dashed var(--muted);opacity:.7}
+.bar b{text-align:right;font-family:var(--serif);font-size:17px}
+.trsum{margin:18px 0 0;padding-top:14px;border-top:1px solid var(--line);font-size:14px}
+.trsum ul{margin:6px 0 0;padding-left:18px;color:var(--muted)}
+.hl{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
+.hl h4,.trsum h4{margin:0 0 6px;font-size:15px}
+.hl ul{margin:0;padding-left:18px;font-size:14px;color:var(--muted)}
+.hl li{margin-bottom:4px}
+.progress{font-size:14px;color:var(--muted);margin-top:16px}
+
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+button.btn{font:inherit;font-size:15px;font-weight:700;border-radius:5px;padding:11px 18px;cursor:pointer;border:1px solid var(--indigo);background:var(--indigo);color:var(--on-indigo)}
+button.btn.ghost{background:transparent;color:var(--indigo)}
+button.btn.quiet{background:transparent;color:var(--muted);border-color:var(--line)}
+.status{font-size:14px;color:var(--muted);margin-top:10px;min-height:1.4em}
+footer{margin-top:48px;font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
+
+@media (max-width:600px){
+  body{font-size:16px}
+  .fields{grid-template-columns:1fr}
+  .target{grid-template-columns:1fr 1fr}
+  .scale div{grid-template-columns:32px 1fr;row-gap:2px}
+  .scale div span{grid-column:2}
+  .seg small{font-size:10.5px}
+  .bar{grid-template-columns:1fr 38px;row-gap:4px}
+  .bar .name{grid-column:1/-1}
+  .hl{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media print{
+  :root{--paper:#fff;--surface:#fff;--ink:#000;--muted:#444;--line:#bbb;--indigo:#2F4B7C;--indigo-soft:#E3E9F3;--on-indigo:#fff}
+  body{background:#fff;font-size:10.5pt}
+  .wrap{max-width:none;padding:0}
+  header.top{padding:0 0 8px}
+  h1{font-size:24pt}
+  .actions,.status,.no-print{display:none!important}
+  .notes textarea{min-height:60px}
+  .item,.q,.summary,.scale{break-inside:avoid}
+  .seg span{min-height:24px;padding:2px}
+  .seg small{display:none}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <p class="club">Budo Akatemia · Shorin-ryu Seibukan</p>
+  <h1>Karaten itsearviointi</h1>
+  <div class="obi" aria-hidden="true">
+    <span style="background-color:#2F4B7C"></span><span style="background-color:#5B3F86"></span><span style="background-color:#6E4526"></span><span style="background-color:#15171C"></span>
+  </div>
+  <div class="obi-legend" aria-hidden="true"><span>Sininen</span><span>Violetti</span><span>Ruskea</span><span>Musta</span></div>
+  <p class="lead">Lomakkeen tarkoitus on tukea tavoitteellista harjoittelua ja oman kehityksen arviointia sinisestä vyöstä mustaan vyöhön. Tee muistiinpanoja täyttäessäsi ja käy lomake läpi Sensein kanssa hyvissä ajoin ennen seuraavaa vyökoetta.</p>
+  <p class="lead small">Vastaukset tallentuvat vain tähän selaimeen. Tulosta lomake tai tallenna se PDF-tiedostoksi keskustelua varten. Tyhjän lomakkeen voi myös tulostaa ja täyttää käsin.</p>
+</header>
+
+<section class="block" aria-labelledby="h-info">
+  <h2 id="h-info">Perustiedot</h2>
+  <div class="fields">
+    <div><label class="f" for="nimi">Nimi</label><input type="text" id="nimi" data-key="nimi" autocomplete="name"></div>
+    <div><label class="f" for="pvm">Päivämäärä</label><input type="date" id="pvm" data-key="pvm"></div>
+    <fieldset class="target full" id="targets"><legend>Mihin vyökokeeseen valmistaudut?</legend></fieldset>
+  </div>
+</section>
+
+<section class="block" aria-labelledby="h-scale">
+  <h2 id="h-scale">Arviointiasteikko</h2>
+  <p class="sub">Osiot 2–8 arvioidaan tällä asteikolla. Jätä kohta tyhjäksi vain, jos se ei koske sinua.</p>
+  <div class="scale">
+    <div><b>1</b><strong>Harjoittelen vielä</strong><span>En vielä hallitse tätä vyöarvoni edellyttämällä tasolla.</span></div>
+    <div><b>2</b><strong>Alkaa sujua</strong><span>Onnistun osittain tai ohjattuna.</span></div>
+    <div><b>3</b><strong>Hallitsen</strong><span>Hallitsen tämän vyöarvoni edellyttämällä tasolla.</span></div>
+    <div><b>4</b><strong>Varma</strong><span>Onnistun varmasti myös haastavissa tilanteissa: väsyneenä, parin kanssa ja vauhdissa.</span></div>
+    <div><b>5</b><strong>Osaan ohjata</strong><span>Osaan myös näyttää, ohjata ja perustella tämän muille.</span></div>
+  </div>
+  <p class="note">Sama asteikko toimii kaikilla vyöarvoilla, mutta vaatimustaso kasvaa vyöarvon noustessa. Vertaa itseäsi tavoittelemasi vyöarvon vaatimuksiin, älä muihin harjoittelijoihin. Viitonen edellyttää, että osaat myös ohjata muita.</p>
+</section>
+
+<section class="group" aria-labelledby="g-tr">
+  <div class="ghead"><h3 id="g-tr">1. Harjoitteluaktiivisuus</h3></div>
+  <p class="gdesc">Nämä ovat vyökokeeseen osallistumisen edellytyksiä, eivätkä ne vaikuta pisteisiin.</p>
+  <div id="training"></div>
+  <div class="notes"><label for="huom-tr">Muistiinpanot</label><textarea id="huom-tr" data-key="huom-tr"></textarea></div>
+</section>
+
+<div id="groups"></div>
+
+<section class="block" aria-labelledby="h-goal">
+  <h2 id="h-goal">Kehitystavoitteeni seuraavalle vyöarvolle</h2>
+  <div class="goal">
+    <div><label class="f" for="p3a">Tekninen tavoite</label><input type="text" id="p3a" data-key="p3a"></div>
+    <div><label class="f" for="p3b">Fyysinen tavoite</label><input type="text" id="p3b" data-key="p3b"></div>
+    <div><label class="f" for="p3c">Tavoite seurayhteisön jäsenenä</label><input type="text" id="p3c" data-key="p3c"></div>
+  </div>
+</section>
+
+<section class="block" aria-labelledby="h-ref">
+  <h2 id="h-ref">Pohdintakysymykset</h2>
+  <p class="sub">Kirjoita lyhyesti omin sanoin.</p>
+  <div class="q"><label class="f" for="p1">Mitkä ovat tällä hetkellä vahvimmat osa-alueeni karatessa?</label><textarea id="p1" data-key="p1"></textarea></div>
+  <div class="q"><label class="f" for="p2">Mitkä ovat tärkeimmät kehityskohteeni ennen seuraavaa vyökoetta?</label><textarea id="p2" data-key="p2"></textarea></div>
+  <div class="q"><label class="f" for="p4">Miten dojo kun ja karate-don periaatteet näkyvät omassa toiminnassani?</label><textarea id="p4" data-key="p4"></textarea></div>
+  <div class="dan hidden" id="danBlock">
+    <h3>1. kyu → 1. dan</h3>
+    <label class="f" for="p5" style="font-weight:500;font-size:16px">Mitä musta vyö minulle tarkoittaa, ja miten voin tukea muiden harjoittelua sekä Budo Akatemian toimintaa tulevaisuudessa?</label>
+    <textarea id="p5" data-key="p5" style="margin-top:8px"></textarea>
+  </div>
+</section>
+
+<section class="block" aria-labelledby="h-sum">
+  <h2 id="h-sum">Yhteenveto</h2>
+  <p class="sub">Päivittyy sitä mukaa kun vastaat. Katkoviiva kuvaa tasoa 3.</p>
+  <div class="summary">
+    <div class="overall"><span class="big" id="ovr">–</span><span class="lbl">osioiden 2–8 keskiarvo, asteikko 1–5</span></div>
+    <div class="bars" id="bars"></div>
+    <div class="hl">
+      <div><h4>Vahvimmat kohdat</h4><ul id="top"></ul></div>
+      <div><h4>Eniten kehitettävää</h4><ul id="low"></ul></div>
+    </div>
+    <div class="trsum"><h4>Harjoitteluaktiivisuus</h4><ul id="trsum"></ul></div>
+    <p class="progress" id="prog"></p>
+  </div>
+  <div class="actions">
+    <button class="btn" type="button" id="printBtn">Tulosta tai tallenna PDF</button>
+    <button class="btn ghost" type="button" id="copyBtn">Kopioi tekstinä</button>
+    <button class="btn quiet" type="button" id="resetBtn">Tyhjennä lomake</button>
+  </div>
+  <p class="status" id="status" role="status" aria-live="polite"></p>
+</section>
+
+<footer>Budo Akatemia ry · Karaten itsearviointi 2026</footer>
+</div>
+
+<script>
+(function(){
+  /* ---------- Sisältö ---------- */
+  var GRADES = [
+    {id:"6k", label:"6. kyu, vihreä",  color:"#3E7A4A", kata:["Fukyugata Ichi"]},
+    {id:"5k", label:"5. kyu, sininen", color:"#2F4B7C", kata:["Fukyugata Ni"]},
+    {id:"4k", label:"4. kyu, violetti",color:"#5B3F86", kata:["Ananku"]},
+    {id:"3k", label:"3. kyu, ruskea",  color:"#6E4526", kata:["Seisan"]},
+    {id:"2k", label:"2. kyu, ruskea",  color:"#6E4526", kata:["Wansu"]},
+    {id:"1k", label:"1. kyu, ruskea",  color:"#6E4526", kata:["Passai"]},
+    {id:"1d", label:"1. dan, musta",   color:"#15171C", kata:["Gojushiho","Naifanchi Shodan","Pinan Shodan"]}
+  ];
+  var TARGETS = ["5k","4k","3k","2k","1k","1d"];
+
+  var TRAINING = [
+    {id:"tr1", type:"yn", text:"Harjoittelen säännöllisesti vyöarvoni edellyttämän määrän viikossa."},
+    {id:"tr2", type:"yn", text:"Vyöarvon vaatima harjoituskertojen määrä on täynnä."},
+    {id:"tr3", type:"yn", text:"Edellisestä vyökokeestani on kulunut vaadittu vähimmäisaika."},
+    {id:"tr4", type:"yn", text:"Kehitän osaamistani myös harjoitusten ulkopuolella."},
+    {id:"tr5", type:"camps", text:"Moneenko leiriin tai muuhun yhteiseen tapahtumaan olen osallistunut viimeisen 12 kuukauden aikana?"}
+  ];
+
+  var GROUPS = [
+    {id:"fys", title:"2. Fyysinen suorituskyky", items:[
+      ["Nopeus","Reagoin ja liikun nopeasti."],
+      ["Kestävyys","Kestävyyteni riittää koko vyökokeeseen hyvällä tekniikalla."],
+      ["Voima","Voimatasoni tukee tehokasta tekniikkaa."],
+      ["Liikkuvuus","Liikkuvuuteni mahdollistaa oikeat asennot ja liikkeet."],
+      ["Tasapaino","Säilytän tasapainoni tekniikoissa ja liikkuessa."],
+      ["Koordinaatio","Kombinaatiot sujuvat hyvin."]]},
+    {id:"kihon", title:"3. Kihon", desc:"Paikaltaan tehtävät tekniikat", items:[
+      ["Asennot","Hallitsen oikeat asennot (dachi)."],
+      ["Liikeradat","Tekniikkani liikeradat ovat puhtaat molemmilla puolilla."],
+      ["Voimantuotto","Tuotan voiman koko kehoa ja keskivartaloa hyödyntäen."],
+      ["Kime","Tekniikkani ovat nopeita ja teräviä."]]},
+    {id:"zenshin", title:"4. Zenshin kotai", desc:"Askeltaen tehtävät tekniikat", items:[
+      ["Askel ja tekniikka","Yhdistän askeleen ja tekniikan yhdeksi kokonaisuudeksi."],
+      ["Voimantuotto liikkeessä","Tekniikkani nopeus ja terävyys säilyvät askeltaessa."],
+      ["Käännökset","Hallitsen käännökset ja suunnanmuutokset vakaasti."]]},
+    {id:"ippon", title:"5. Ippon kumite", desc:"Yhden askeleen pariharjoitukset", items:[
+      ["Etäisyys ja ajoitus","Hallitsen oikean etäisyyden ja ajoituksen."],
+      ["Torjunta ja vastatekniikka","Yhdistän torjunnan ja vastatekniikan sujuvaksi kokonaisuudeksi."],
+      ["Roolit","Hallitsen sekä hyökkääjän että puolustajan roolin."]]},
+    {id:"kata", title:"6. Kata", katas:true, items:[
+      ["Muoto","Suuntani, asentoni ja tekniikat pysyvät oikeina koko katan ajan."],
+      ["Rytmi","Suoritan katan oikealla rytmillä."],
+      ["Keskittyminen","Suoritan katan keskittyneesti alusta loppuun."],
+      ["Bunkai","Osaan näyttää katojen keskeiset sovellukset parin kanssa."]]},
+    {id:"kumite", title:"7. Kumite", desc:"Ottelu", items:[
+      ["Etäisyys ja ajoitus","Hallitsen etäisyyden, ajoituksen ja liikkumisen ottelussa."],
+      ["Kontrolli","Käytän tekniikoita kontrolloidusti myös kovemmassa tempossa."],
+      ["Aloitteellisuus","Teen itse aloitteita."],
+      ["Zanshin","Säilytän valppauden ja toimintakykyni paineen alla."]]},
+    {id:"teoria", title:"8. Teoria", items:[
+      ["Terminologia","Tunnen keskeisen japaninkielisen terminologian ja komennot."],
+      ["Dojo-etiketti","Tunnen dojo-etiketin."],
+      ["Historia","Tunnen Seibukan-karaten linjan ja historian."]]},
+    {id:"budo", title:"9. Budo-henki ja seurayhteisö", freq:true,
+      desc:"Arvioi, kuinka usein toimit näin. Asteikko: harvoin – joskus – usein – lähes aina – aina, ja olen esimerkkinä muille.", items:[
+      ["Dojo kun","Toimin dojo kunin periaatteiden mukaisesti."],
+      ["Kunnioitus","Kohtelen harjoituskavereita ja ohjaajia kunnioittavasti."],
+      ["Tuki muille","Autan ja kannustan muita harjoittelijoita."],
+      ["Ilmapiiri","Vaikutan omalla toiminnallani myönteisesti harjoitusilmapiiriin."],
+      ["Vastuu","Kannan vastuuta yhteisistä asioista ja seuran toiminnasta."]]}
+  ];
+
+  var SCALE = [["1","Harjoittelen vielä"],["2","Alkaa sujua"],["3","Hallitsen"],["4","Varma"],["5","Osaan ohjata"]];
+  var FREQ  = [["1","Harvoin"],["2","Joskus"],["3","Usein"],["4","Lähes aina"],["5","Aina, esimerkkinä"]];
+  var KEY = "budoakatemia-itsearviointi-2026-v3";
+  var state = {ratings:{}, text:{}, taso:""};
+
+  /* ---------- Apufunktiot ---------- */
+  function load(){ try{ var s=localStorage.getItem(KEY); if(s){ var o=JSON.parse(s); if(o&&typeof o==="object"){ state.ratings=o.ratings||{}; state.text=o.text||{}; state.taso=o.taso||""; } } }catch(e){} }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+  function el(tag, attrs, html){ var e=document.createElement(tag); if(attrs) for(var k in attrs){ if(k==="class") e.className=attrs[k]; else e.setAttribute(k,attrs[k]); } if(html!=null) e.innerHTML=html; return e; }
+  function txt(tag, attrs, t){ var e=el(tag,attrs); e.textContent=t; return e; }
+  function gradeIndex(id){ for(var i=0;i<GRADES.length;i++) if(GRADES[i].id===id) return i; return -1; }
+  function requiredKatas(){
+    var ti=gradeIndex(state.taso); if(ti<0) return [];
+    var out=[]; for(var i=0;i<=ti;i++) GRADES[i].kata.forEach(function(k){ out.push({name:k, grade:GRADES[i].label, isNew:i===ti}); });
+    return out;
+  }
+  function seg(name, opts, cls, labelText, describedBy){
+    var fs=el("fieldset",{"class":"seg "+cls}); if(describedBy) fs.setAttribute("aria-describedby",describedBy);
+    fs.appendChild(txt("legend",null,labelText));
+    opts.forEach(function(o){
+      var lab=el("label"), inp=el("input",{type:"radio",name:name,value:o[0]});
+      var sp=el("span");
+      if(cls==="rate"){ sp.appendChild(document.createTextNode(o[0])); sp.appendChild(txt("small",null,o[1])); }
+      else sp.appendChild(document.createTextNode(o[1]));
+      lab.appendChild(inp); lab.appendChild(sp); fs.appendChild(lab);
+    });
+    var cur=state.ratings[name]; if(cur!=null){ var r=fs.querySelector('input[value="'+cur+'"]'); if(r) r.checked=true; }
+    return fs;
+  }
+  function ratingItem(key, topic, text, scale, extra){
+    var item=el("div",{"class":"item"});
+    var p=el("p",{id:"t-"+key});
+    if(topic) p.appendChild(txt("span",{"class":"topic"},topic+". "));
+    p.appendChild(document.createTextNode(text));
+    if(extra) p.appendChild(extra);
+    item.appendChild(p);
+    item.appendChild(seg(key, scale, "rate", (topic?topic+": ":"")+text, "t-"+key));
+    return item;
+  }
+
+  /* ---------- Vyökokeen valinta ---------- */
+  var tf=document.getElementById("targets");
+  TARGETS.forEach(function(id){
+    var g=GRADES[gradeIndex(id)];
+    var lab=el("label"), inp=el("input",{type:"radio",name:"taso",value:id});
+    var opt=el("span",{"class":"opt"}); var sw=el("span",{"class":"sw"}); sw.style.background=g.color;
+    opt.appendChild(sw); opt.appendChild(document.createTextNode(g.label));
+    lab.appendChild(inp); lab.appendChild(opt); tf.appendChild(lab);
+  });
+
+  load();
+
+  /* ---------- Harjoitteluaktiivisuus ---------- */
+  var tr=document.getElementById("training");
+  TRAINING.forEach(function(t){
+    var item=el("div",{"class":"item"});
+    item.appendChild(txt("p",{id:"t-"+t.id},t.text));
+    if(t.type==="yn") item.appendChild(seg(t.id,[["kyllä","Kyllä"],["ei","Ei"]],"yn",t.text,"t-"+t.id));
+    else item.appendChild(seg(t.id,[["0","0"],["1","1"],["2","2"],["3","3+"]],"camps",t.text,"t-"+t.id));
+    tr.appendChild(item);
+  });
+
+  /* ---------- Osiot ---------- */
+  var root=document.getElementById("groups");
+  GROUPS.forEach(function(g){
+    var sec=el("section",{"class":"group","aria-labelledby":"g-"+g.id});
+    var head=el("div",{"class":"ghead"});
+    head.appendChild(txt("h3",{id:"g-"+g.id},g.title));
+    head.appendChild(el("span",{"class":"avg"},'Keskiarvo <strong id="avg-'+g.id+'">–</strong>'));
+    sec.appendChild(head);
+    if(g.desc) sec.appendChild(txt("p",{"class":"gdesc"},g.desc));
+    var sc = g.freq? FREQ : SCALE;
+    g.items.forEach(function(it,i){ sec.appendChild(ratingItem(g.id+"-"+i, it[0], it[1], sc)); });
+    if(g.katas){
+      sec.appendChild(txt("h4",{"class":"subhead"},"Vaaditut katat"));
+      sec.appendChild(txt("p",{"class":"gdesc"},"Vyökokeessa edellytetään myös kaikkien aiempien katojen hallintaa. Arvioi, kuinka varmasti hallitset kunkin katan ilman muistivirheitä."));
+      sec.appendChild(el("div",{id:"katalist"}));
+    }
+    var n=el("div",{"class":"notes"});
+    n.appendChild(txt("label",{"for":"huom-"+g.id},"Muistiinpanot"));
+    n.appendChild(el("textarea",{id:"huom-"+g.id,"data-key":"huom-"+g.id}));
+    sec.appendChild(n);
+    root.appendChild(sec);
+  });
+
+  function renderKatas(){
+    var body=document.getElementById("katalist"); body.innerHTML="";
+    var ks=requiredKatas();
+    if(!ks.length){ body.appendChild(txt("div",{"class":"empty"},"Valitse perustiedoista vyökoe, niin vaaditut katat näkyvät tässä.")); return; }
+    ks.forEach(function(k){
+      var extra=document.createDocumentFragment();
+      if(k.isNew) extra.appendChild(txt("span",{"class":"tag"},"Uusi kata"));
+      else extra.appendChild(txt("span",{"class":"grade"},k.grade));
+      var item=ratingItem("kata:"+k.name, null, k.name, SCALE, extra);
+      item.querySelector("p").style.fontWeight="700";
+      body.appendChild(item);
+    });
+  }
+
+  /* ---------- Palautus ---------- */
+  document.querySelectorAll("[data-key]").forEach(function(f){
+    var k=f.getAttribute("data-key");
+    if(state.text[k]) f.value=state.text[k];
+    if(k==="pvm" && !f.value){ try{ f.value=new Date().toISOString().slice(0,10); }catch(e){} }
+  });
+  if(state.taso){ var t=document.querySelector('input[name="taso"][value="'+state.taso+'"]'); if(t) t.checked=true; }
+  renderKatas();
+
+  /* ---------- Laskenta ---------- */
+  function avg(a){ return a.length? a.reduce(function(x,y){return x+y;},0)/a.length : null; }
+  function fmt(n){ return n==null? "–" : n.toFixed(1).replace(".",","); }
+  function groupItems(g){
+    var out=g.items.map(function(it,i){ return {key:g.id+"-"+i, label:it[0]+": "+it[1]}; });
+    if(g.katas) requiredKatas().forEach(function(k){ out.push({key:"kata:"+k.name, label:"Kata "+k.name}); });
+    return out;
+  }
+  function update(){
+    document.getElementById("danBlock").classList.toggle("hidden", state.taso!=="1d");
+    var bars=document.getElementById("bars"); bars.innerHTML="";
+    var gav=[], skill=[], answered=0, total=0;
+    GROUPS.forEach(function(g){
+      var vals=[];
+      groupItems(g).forEach(function(it){ total++; var v=state.ratings[it.key]; if(v!=null){ v=+v; vals.push(v); answered++; if(!g.freq) skill.push({t:it.label, v:v}); } });
+      var a=avg(vals);
+      document.getElementById("avg-"+g.id).textContent=fmt(a);
+      if(a!=null && !g.freq) gav.push(a);
+      var row=el("div",{"class":"bar"});
+      row.appendChild(txt("span",{"class":"name"},g.title.replace(/^\d+\.\s*/,"")));
+      var trk=el("div",{"class":"track"}), fill=el("i"); fill.style.width=a==null?"0":((a/5)*100)+"%"; trk.appendChild(fill); row.appendChild(trk);
+      row.appendChild(txt("b",null,fmt(a)));
+      bars.appendChild(row);
+    });
+    document.getElementById("ovr").textContent=fmt(avg(gav));
+    function list(id, arr){ var ul=document.getElementById(id); ul.innerHTML=""; if(!arr.length){ ul.appendChild(txt("li",null,"Ei vielä tarpeeksi vastauksia")); return; } arr.forEach(function(x){ ul.appendChild(txt("li",null,x.t+" ("+x.v+")")); }); }
+    if(skill.length>=6){
+      var s=skill.slice().sort(function(a,b){return b.v-a.v;});
+      list("top", s.slice(0,3).filter(function(x){return x.v>=3;}));
+      list("low", s.slice(-3).reverse().filter(function(x){return x.v<=3;}));
+    } else { list("top",[]); list("low",[]); }
+    var tul=document.getElementById("trsum"); tul.innerHTML="";
+    TRAINING.forEach(function(t){
+      var v=state.ratings[t.id];
+      var shown = v==null? "ei vastattu" : (t.type==="camps"? (v==="3"?"3 tai enemmän":v) : v);
+      tul.appendChild(txt("li",null,t.text.replace(/[?.]$/,"")+": "+shown));
+    });
+    document.getElementById("prog").textContent="Arvioitu "+answered+" / "+total+" väittämää.";
+  }
+
+  /* ---------- Tapahtumat ---------- */
+  document.addEventListener("change", function(e){
+    var t=e.target;
+    if(t.name==="taso"){ state.taso=t.value; renderKatas(); }
+    else if(t.type==="radio"){ state.ratings[t.name]= /^tr/.test(t.name)? t.value : parseInt(t.value,10); }
+    save(); update();
+  });
+  document.addEventListener("input", function(e){
+    var k=e.target.getAttribute && e.target.getAttribute("data-key");
+    if(k){ state.text[k]=e.target.value; save(); }
+  });
+  function status(msg){ var s=document.getElementById("status"); s.textContent=msg; clearTimeout(status.t); status.t=setTimeout(function(){s.textContent="";},4000); }
+  document.getElementById("printBtn").addEventListener("click", function(){ window.print(); });
+
+  document.getElementById("copyBtn").addEventListener("click", function(){
+    var L=[], tx=state.text, gi=gradeIndex(state.taso);
+    L.push("Budo Akatemia – karaten itsearviointi");
+    L.push("Nimi: "+(tx.nimi||"")); L.push("Päivämäärä: "+(tx.pvm||""));
+    L.push("Vyökoe: "+(gi>=0?GRADES[gi].label:""));
+    L.push(""); L.push("1. Harjoitteluaktiivisuus");
+    TRAINING.forEach(function(t){ var v=state.ratings[t.id]; L.push("  "+(v==null?"-":(t.type==="camps"&&v==="3"?"3+":v))+"  "+t.text); });
+    if(tx["huom-tr"]) L.push("  Muistiinpanot: "+tx["huom-tr"]);
+    GROUPS.forEach(function(g){
+      L.push(""); L.push(g.title+" (keskiarvo "+document.getElementById("avg-"+g.id).textContent+")");
+      groupItems(g).forEach(function(it){ var v=state.ratings[it.key]; L.push("  "+(v==null?"-":v)+"  "+it.label); });
+      if(tx["huom-"+g.id]) L.push("  Muistiinpanot: "+tx["huom-"+g.id]);
+    });
+    L.push(""); L.push("Osioiden 2–8 keskiarvo: "+document.getElementById("ovr").textContent);
+    var Q=[["p3a","Tekninen tavoite"],["p3b","Fyysinen tavoite"],["p3c","Tavoite seurayhteisön jäsenenä"],["p1","Vahvimmat osa-alueet"],["p2","Tärkeimmät kehityskohteet"],["p4","Dojo kun ja karate-don periaatteet"]];
+    if(state.taso==="1d") Q.push(["p5","Mitä musta vyö minulle tarkoittaa"]);
+    L.push(""); Q.forEach(function(q){ L.push(q[1]+": "+(tx[q[0]]||"")); });
+    var text=L.join("\n");
+    function fallback(){ var ta=document.createElement("textarea"); ta.value=text; ta.style.position="fixed"; ta.style.opacity="0"; document.body.appendChild(ta); ta.select(); var ok=false; try{ ok=document.execCommand("copy"); }catch(e){} document.body.removeChild(ta); status(ok?"Kopioitu leikepöydälle.":"Kopiointi ei onnistunut. Käytä tulostusta."); }
+    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(function(){status("Kopioitu leikepöydälle.");},fallback); } else fallback();
+  });
+
+  document.getElementById("resetBtn").addEventListener("click", function(){
+    if(!confirm("Tyhjennetäänkö kaikki vastaukset?")) return;
+    state={ratings:{},text:{},taso:""};
+    try{ localStorage.removeItem(KEY); }catch(e){}
+    document.querySelectorAll("input[type=radio]").forEach(function(r){r.checked=false;});
+    document.querySelectorAll("[data-key]").forEach(function(f){f.value="";});
+    renderKatas(); update(); status("Lomake tyhjennetty.");
+  });
+
+  update();
+})();
+</script>
+</body>
+</html>
