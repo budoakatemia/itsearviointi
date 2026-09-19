@@ -6,7 +6,7 @@
 <title>Karaten itsearviointi – Budo Akatemia</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@600;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --paper:#F2F3EF; --surface:#FFFFFF; --ink:#1B2233; --muted:#5B6270; --line:#D6D9D1;
@@ -54,8 +54,8 @@ h2{font-family:var(--serif);font-weight:800;font-size:26px;line-height:1.2;margi
 .fields{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .fields .full{grid-column:1/-1}
 label.f,.f{display:block;font-size:14px;font-weight:700;margin-bottom:5px}
-input[type=text],input[type=date],textarea{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:5px;padding:9px 11px}
-textarea{min-height:88px;resize:vertical;line-height:1.5}
+input[type=text],input[type=date],input[type=number],textarea{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:5px;padding:9px 11px}
+textarea{min-height:88px;resize:vertical;line-height:1.5;overflow:hidden}
 input:focus-visible,textarea:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
 
 .target{border:0;padding:0;margin:0;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
@@ -81,7 +81,7 @@ input:focus-visible,textarea:focus-visible,button:focus-visible,summary:focus-vi
 .grade{font-size:13px;color:var(--muted);margin-left:8px}
 
 .seg{display:grid;gap:4px;border:0;margin:0;padding:0}
-.seg legend{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.seg legend{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
 .seg label{position:relative;cursor:pointer}
 .seg input{position:absolute;opacity:0;inset:0;margin:0}
 .seg span{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:40px;border:1px solid var(--line);background:var(--surface);border-radius:4px;color:var(--muted);font-weight:700;font-size:15px;line-height:1.15;padding:5px 2px;text-align:center;transition:background .12s,color .12s}
@@ -103,11 +103,16 @@ input:focus-visible,textarea:focus-visible,button:focus-visible,summary:focus-vi
 .q{margin-top:22px}
 .q > label.f,.q > .f{font-size:16px;font-weight:500;margin-bottom:8px}
 .hint{font-size:14px;color:var(--muted);margin:-4px 0 8px}
+input.num{width:140px}
+textarea.short{min-height:46px}
+.group .q{margin-top:14px}
+.group .q > label.f{font-size:16px;font-weight:500}
 .goal{display:grid;gap:10px}
 .goal label.f{font-weight:500;font-size:14px;color:var(--muted)}
 .dan{margin-top:28px;border-left:6px solid var(--black);padding:4px 0 4px 16px}
 .dan h3{font-family:var(--serif);font-size:20px;margin:0 0 4px}
 .hidden{display:none!important}
+.jsnote{margin:20px 0 0;padding:14px 16px;border-left:4px solid #B3261E;background:#FBEAEA;color:#5C1410;border-radius:0 6px 6px 0;font-size:15px}
 
 /* Summary */
 .summary{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:22px}
@@ -158,6 +163,7 @@ footer{margin-top:48px;font-size:13px;color:var(--muted);border-top:1px solid va
   .item,.q,.summary,.scale{break-inside:avoid}
   .seg span{min-height:24px;padding:2px}
   .seg small{display:none}
+  ::placeholder{color:transparent}
   *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
 </style>
@@ -165,6 +171,8 @@ footer{margin-top:48px;font-size:13px;color:var(--muted);border-top:1px solid va
 <body>
 <div class="wrap">
 
+<noscript><p class="jsnote">Lomake tarvitsee JavaScriptin toimiakseen. Avaa sivu tavallisella selaimella, esimerkiksi Safarilla tai Chromella, osoitteesta budoakatemia.github.io.</p></noscript>
+<p class="jsnote" id="jserr" hidden></p>
 <header class="top">
   <p class="club">Budo Akatemia · Shorin-ryu Seibukan</p>
   <h1>Karaten itsearviointi</h1>
@@ -172,7 +180,9 @@ footer{margin-top:48px;font-size:13px;color:var(--muted);border-top:1px solid va
     <span style="background-color:#2F4B7C"></span><span style="background-color:#5B3F86"></span><span style="background-color:#6E4526"></span><span style="background-color:#15171C"></span>
   </div>
   <div class="obi-legend" aria-hidden="true"><span>Sininen</span><span>Violetti</span><span>Ruskea</span><span>Musta</span></div>
-  <p class="lead">Lomakkeen tarkoitus on tukea tavoitteellista harjoittelua ja oman kehityksen arviointia sinisestä vyöstä mustaan vyöhön. Tee muistiinpanoja täyttäessäsi ja käy lomake läpi Sensein kanssa hyvissä ajoin ennen seuraavaa vyökoetta.</p>
+  <p class="lead">Jokainen harjoitus, oivallus ja vyökoe vie sinua eteenpäin karatekan matkalla. Tämä itsearviointi auttaa sinua näkemään, mitä osaat jo hyvin ja mihin kannattaa seuraavaksi keskittyä.</p>
+  <p class="lead">Täytä lomake ja keskustele vastauksistasi Sensein kanssa 6–8 viikkoa ennen vyökoetta. Kun tunnistat kehityskohteesi ajoissa, ehdit harjoitella niitä tavoitteellisesti.</p>
+  <p class="lead">Ole rehellinen itsellesi. Suurin edistys syntyy, kun tiedät, missä olet nyt, ja päätät määrätietoisesti, mihin pyrit seuraavaksi.</p>
   <p class="lead small">Vastaukset tallentuvat vain tähän selaimeen. Tulosta lomake tai tallenna se PDF-tiedostoksi keskustelua varten. Tyhjän lomakkeen voi myös tulostaa ja täyttää käsin.</p>
 </header>
 
@@ -210,18 +220,18 @@ footer{margin-top:48px;font-size:13px;color:var(--muted);border-top:1px solid va
 <section class="block" aria-labelledby="h-goal">
   <h2 id="h-goal">Kehitystavoitteeni seuraavalle vyöarvolle</h2>
   <div class="goal">
-    <div><label class="f" for="p3a">Tekninen tavoite</label><input type="text" id="p3a" data-key="p3a"></div>
-    <div><label class="f" for="p3b">Fyysinen tavoite</label><input type="text" id="p3b" data-key="p3b"></div>
-    <div><label class="f" for="p3c">Tavoite seurayhteisön jäsenenä</label><input type="text" id="p3c" data-key="p3c"></div>
+    <div><label class="f" for="p3a">Tekninen tavoite</label><textarea id="p3a" data-key="p3a" class="short" rows="1"></textarea></div>
+    <div><label class="f" for="p3b">Fyysinen tavoite</label><textarea id="p3b" data-key="p3b" class="short" rows="1"></textarea></div>
+    <div><label class="f" for="p3c">Tavoite seurayhteisön jäsenenä</label><textarea id="p3c" data-key="p3c" class="short" rows="1"></textarea></div>
+    <div><label class="f" for="p3d">Ensimmäinen konkreettinen toimenpiteeni</label><textarea id="p3d" data-key="p3d" class="short" rows="1" placeholder="esim. teen lonkan liikkuvuusharjoituksen kolme kertaa viikossa"></textarea></div>
   </div>
 </section>
 
 <section class="block" aria-labelledby="h-ref">
   <h2 id="h-ref">Pohdintakysymykset</h2>
   <p class="sub">Kirjoita lyhyesti omin sanoin.</p>
+  <div class="q"><label class="f" for="p0">Mitä olen oppinut nykyisellä vyöarvollani?</label><textarea id="p0" data-key="p0"></textarea></div>
   <div class="q"><label class="f" for="p1">Mitkä ovat tällä hetkellä vahvimmat osa-alueeni karatessa?</label><textarea id="p1" data-key="p1"></textarea></div>
-  <div class="q"><label class="f" for="p2">Mitkä ovat tärkeimmät kehityskohteeni ennen seuraavaa vyökoetta?</label><textarea id="p2" data-key="p2"></textarea></div>
-  <div class="q"><label class="f" for="p4">Miten dojo kun ja karate-don periaatteet näkyvät omassa toiminnassani?</label><textarea id="p4" data-key="p4"></textarea></div>
   <div class="dan hidden" id="danBlock">
     <h3>1. kyu → 1. dan</h3>
     <label class="f" for="p5" style="font-weight:500;font-size:16px">Mitä musta vyö minulle tarkoittaa, ja miten voin tukea muiden harjoittelua sekä Budo Akatemian toimintaa tulevaisuudessa?</label>
@@ -233,7 +243,6 @@ footer{margin-top:48px;font-size:13px;color:var(--muted);border-top:1px solid va
   <h2 id="h-sum">Yhteenveto</h2>
   <p class="sub">Päivittyy sitä mukaa kun vastaat. Katkoviiva kuvaa tasoa 3.</p>
   <div class="summary">
-    <div class="overall"><span class="big" id="ovr">–</span><span class="lbl">osioiden 2–8 keskiarvo, asteikko 1–5</span></div>
     <div class="bars" id="bars"></div>
     <div class="hl">
       <div><h4>Vahvimmat kohdat</h4><ul id="top"></ul></div>
@@ -254,6 +263,10 @@ footer{margin-top:48px;font-size:13px;color:var(--muted);border-top:1px solid va
 </div>
 
 <script>
+window.addEventListener("error", function(e){
+  var n = document.getElementById("jserr");
+  if(n && !document.querySelector("#groups .group")){ n.hidden = false; n.textContent = "Lomakkeen lataus epäonnistui tällä selaimella. Kokeile toista selainta ja kerro tämä viesti ylläpitäjälle: " + (e.message || "tuntematon virhe"); }
+});
 (function(){
   /* ---------- Sisältö ---------- */
   var GRADES = [
@@ -268,15 +281,16 @@ footer{margin-top:48px;font-size:13px;color:var(--muted);border-top:1px solid va
   var TARGETS = ["5k","4k","3k","2k","1k","1d"];
 
   var TRAINING = [
-    {id:"tr1", type:"yn", text:"Harjoittelen säännöllisesti vyöarvoni edellyttämän määrän viikossa."},
+    {id:"tr6", type:"yn", text:"Olen kirjannut harjoitukseni harjoitusseurantaan."},
+    {id:"tr7", type:"num", text:"Montako kertaa olen harjoitellut viimeisen 4 kuukauden aikana?", hint:"Katso määrä harjoitusseurannasta."},
     {id:"tr2", type:"yn", text:"Vyöarvon vaatima harjoituskertojen määrä on täynnä."},
     {id:"tr3", type:"yn", text:"Edellisestä vyökokeestani on kulunut vaadittu vähimmäisaika."},
     {id:"tr4", type:"yn", text:"Kehitän osaamistani myös harjoitusten ulkopuolella."},
-    {id:"tr5", type:"camps", text:"Moneenko leiriin tai muuhun yhteiseen tapahtumaan olen osallistunut viimeisen 12 kuukauden aikana?"}
+    {id:"tr5", type:"camps", text:"Moneenko leiriin olen osallistunut viimeisen 12 kuukauden aikana?"}
   ];
 
   var GROUPS = [
-    {id:"fys", title:"2. Fyysinen suorituskyky", items:[
+    {id:"fys", title:"2. Fyysinen suorituskyky", kunto:true, items:[
       ["Nopeus","Reagoin ja liikun nopeasti."],
       ["Kestävyys","Kestävyyteni riittää koko vyökokeeseen hyvällä tekniikalla."],
       ["Voima","Voimatasoni tukee tehokasta tekniikkaa."],
@@ -284,14 +298,14 @@ footer{margin-top:48px;font-size:13px;color:var(--muted);border-top:1px solid va
       ["Tasapaino","Säilytän tasapainoni tekniikoissa ja liikkuessa."],
       ["Koordinaatio","Kombinaatiot sujuvat hyvin."]]},
     {id:"kihon", title:"3. Kihon", desc:"Paikaltaan tehtävät tekniikat", items:[
-      ["Asennot","Hallitsen oikeat asennot (dachi)."],
-      ["Liikeradat","Tekniikkani liikeradat ovat puhtaat molemmilla puolilla."],
+      ["Asennot","Asentoni pysyvät oikeina eri tekniikoissa."],
+      ["Liikeradat","Tekniikkani liikeradat ovat oikeat molemmilla puolilla."],
       ["Voimantuotto","Tuotan voiman koko kehoa ja keskivartaloa hyödyntäen."],
       ["Kime","Tekniikkani ovat nopeita ja teräviä."]]},
     {id:"zenshin", title:"4. Zenshin kotai", desc:"Askeltaen tehtävät tekniikat", items:[
       ["Askel ja tekniikka","Yhdistän askeleen ja tekniikan yhdeksi kokonaisuudeksi."],
       ["Voimantuotto liikkeessä","Tekniikkani nopeus ja terävyys säilyvät askeltaessa."],
-      ["Käännökset","Hallitsen käännökset ja suunnanmuutokset vakaasti."]]},
+      ["Käännökset","Käännökseni ovat nopeita ja päättyvät vakaaseen asentoon."]]},
     {id:"ippon", title:"5. Ippon kumite", desc:"Yhden askeleen pariharjoitukset", items:[
       ["Etäisyys ja ajoitus","Hallitsen oikean etäisyyden ja ajoituksen."],
       ["Torjunta ja vastatekniikka","Yhdistän torjunnan ja vastatekniikan sujuvaksi kokonaisuudeksi."],
@@ -312,7 +326,6 @@ footer{margin-top:48px;font-size:13px;color:var(--muted);border-top:1px solid va
       ["Historia","Tunnen Seibukan-karaten linjan ja historian."]]},
     {id:"budo", title:"9. Budo-henki ja seurayhteisö", freq:true,
       desc:"Arvioi, kuinka usein toimit näin. Asteikko: harvoin – joskus – usein – lähes aina – aina, ja olen esimerkkinä muille.", items:[
-      ["Dojo kun","Toimin dojo kunin periaatteiden mukaisesti."],
       ["Kunnioitus","Kohtelen harjoituskavereita ja ohjaajia kunnioittavasti."],
       ["Tuki muille","Autan ja kannustan muita harjoittelijoita."],
       ["Ilmapiiri","Vaikutan omalla toiminnallani myönteisesti harjoitusilmapiiriin."],
@@ -321,198 +334,294 @@ footer{margin-top:48px;font-size:13px;color:var(--muted);border-top:1px solid va
 
   var SCALE = [["1","Harjoittelen vielä"],["2","Alkaa sujua"],["3","Hallitsen"],["4","Varma"],["5","Osaan ohjata"]];
   var FREQ  = [["1","Harvoin"],["2","Joskus"],["3","Usein"],["4","Lähes aina"],["5","Aina, esimerkkinä"]];
-  var KEY = "budoakatemia-itsearviointi-2026-v3";
+  var YN    = [["kyllä","Kyllä"],["ei","Ei"]];
+  var CAMPS = [["0","0"],["1","1"],["2","2"],["3","3+"]];
+  var KEY = "budoakatemia-itsearviointi-v4";
   var state = {ratings:{}, text:{}, taso:""};
+  var $ = function(id){ return document.getElementById(id); };
+
+  /* Pysyvät avaimet: vastaus sidotaan kohdan nimeen, ei järjestysnumeroon,
+     joten kohtien lisääminen tai poistaminen ei siirrä vanhoja vastauksia väärille riveille. */
+  function slug(t){ return t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,""); }
+  GROUPS.forEach(function(g){
+    g.items = g.items.map(function(it){ return {key:g.id+"-"+slug(it[0]), topic:it[0], text:it[1]}; });
+  });
+
+  /* ---------- Tallennus ---------- */
+  function load(){
+    try{
+      var o = JSON.parse(localStorage.getItem(KEY) || "null");
+      if(o && typeof o === "object"){ state.ratings = o.ratings || {}; state.text = o.text || {}; state.taso = o.taso || ""; }
+    }catch(e){}
+  }
+  var saveTimer = null;
+  function saveNow(){ clearTimeout(saveTimer); saveTimer = null; try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+  function save(){ clearTimeout(saveTimer); saveTimer = setTimeout(saveNow, 300); }
+  window.addEventListener("pagehide", function(){ if(saveTimer) saveNow(); });
+  document.addEventListener("visibilitychange", function(){ if(document.visibilityState === "hidden" && saveTimer) saveNow(); });
 
   /* ---------- Apufunktiot ---------- */
-  function load(){ try{ var s=localStorage.getItem(KEY); if(s){ var o=JSON.parse(s); if(o&&typeof o==="object"){ state.ratings=o.ratings||{}; state.text=o.text||{}; state.taso=o.taso||""; } } }catch(e){} }
-  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
-  function el(tag, attrs, html){ var e=document.createElement(tag); if(attrs) for(var k in attrs){ if(k==="class") e.className=attrs[k]; else e.setAttribute(k,attrs[k]); } if(html!=null) e.innerHTML=html; return e; }
-  function txt(tag, attrs, t){ var e=el(tag,attrs); e.textContent=t; return e; }
-  function gradeIndex(id){ for(var i=0;i<GRADES.length;i++) if(GRADES[i].id===id) return i; return -1; }
+  function el(tag, attrs, text){
+    var e = document.createElement(tag);
+    if(attrs) for(var k in attrs){ if(k === "class") e.className = attrs[k]; else e.setAttribute(k, attrs[k]); }
+    if(text != null) e.textContent = text;
+    return e;
+  }
+  function pad(n){ return (n < 10 ? "0" : "") + n; }
+  function today(){ var d = new Date(); return d.getFullYear() + "-" + pad(d.getMonth()+1) + "-" + pad(d.getDate()); }
+  function gradeIndex(id){ for(var i = 0; i < GRADES.length; i++) if(GRADES[i].id === id) return i; return -1; }
   function requiredKatas(){
-    var ti=gradeIndex(state.taso); if(ti<0) return [];
-    var out=[]; for(var i=0;i<=ti;i++) GRADES[i].kata.forEach(function(k){ out.push({name:k, grade:GRADES[i].label, isNew:i===ti}); });
+    var ti = gradeIndex(state.taso), out = [];
+    for(var i = 0; i <= ti; i++) GRADES[i].kata.forEach(function(k){ out.push({key:"kata:"+k, name:k, grade:GRADES[i].label, isNew:i === ti}); });
     return out;
   }
-  function seg(name, opts, cls, labelText, describedBy){
-    var fs=el("fieldset",{"class":"seg "+cls}); if(describedBy) fs.setAttribute("aria-describedby",describedBy);
-    fs.appendChild(txt("legend",null,labelText));
+  function grow(t){ t.style.height = "auto"; t.style.height = (t.scrollHeight + 2) + "px"; }
+  function growAll(){ document.querySelectorAll("textarea").forEach(grow); }
+
+  function seg(name, opts, cls, label, describedBy){
+    var fs = el("fieldset", {"class":"seg "+cls, "aria-describedby":describedBy});
+    fs.appendChild(el("legend", null, label));
+    var cur = state.ratings[name];
     opts.forEach(function(o){
-      var lab=el("label"), inp=el("input",{type:"radio",name:name,value:o[0]});
-      var sp=el("span");
-      if(cls==="rate"){ sp.appendChild(document.createTextNode(o[0])); sp.appendChild(txt("small",null,o[1])); }
-      else sp.appendChild(document.createTextNode(o[1]));
+      var lab = el("label"), inp = el("input", {type:"radio", name:name, value:o[0]}), sp = el("span");
+      if(cur != null && String(cur) === o[0]) inp.checked = true;
+      if(cls === "rate"){ sp.appendChild(document.createTextNode(o[0])); sp.appendChild(el("small", null, o[1])); }
+      else sp.textContent = o[1];
       lab.appendChild(inp); lab.appendChild(sp); fs.appendChild(lab);
     });
-    var cur=state.ratings[name]; if(cur!=null){ var r=fs.querySelector('input[value="'+cur+'"]'); if(r) r.checked=true; }
     return fs;
   }
   function ratingItem(key, topic, text, scale, extra){
-    var item=el("div",{"class":"item"});
-    var p=el("p",{id:"t-"+key});
-    if(topic) p.appendChild(txt("span",{"class":"topic"},topic+". "));
+    var item = el("div", {"class":"item"}), p = el("p", {id:"t-"+key});
+    if(topic) p.appendChild(el("span", {"class":"topic"}, topic + ". "));
     p.appendChild(document.createTextNode(text));
     if(extra) p.appendChild(extra);
     item.appendChild(p);
-    item.appendChild(seg(key, scale, "rate", (topic?topic+": ":"")+text, "t-"+key));
+    item.appendChild(seg(key, scale, "rate", (topic ? topic + ": " : "") + text, "t-"+key));
     return item;
   }
+  function textField(key, label, tag){
+    var d = el("div", {"class":"q"});
+    d.appendChild(el("label", {"class":"f", "for":key}, label));
+    d.appendChild(el(tag || "textarea", {id:key, "data-key":key}));
+    return d;
+  }
+
+  load();
 
   /* ---------- Vyökokeen valinta ---------- */
-  var tf=document.getElementById("targets");
+  var tf = $("targets");
   TARGETS.forEach(function(id){
-    var g=GRADES[gradeIndex(id)];
-    var lab=el("label"), inp=el("input",{type:"radio",name:"taso",value:id});
-    var opt=el("span",{"class":"opt"}); var sw=el("span",{"class":"sw"}); sw.style.background=g.color;
+    var g = GRADES[gradeIndex(id)];
+    var lab = el("label"), inp = el("input", {type:"radio", name:"taso", value:id});
+    var opt = el("span", {"class":"opt"}), sw = el("span", {"class":"sw"});
+    sw.style.background = g.color;
+    if(state.taso === id) inp.checked = true;
     opt.appendChild(sw); opt.appendChild(document.createTextNode(g.label));
     lab.appendChild(inp); lab.appendChild(opt); tf.appendChild(lab);
   });
 
-  load();
-
   /* ---------- Harjoitteluaktiivisuus ---------- */
-  var tr=document.getElementById("training");
+  var trFrag = document.createDocumentFragment();
   TRAINING.forEach(function(t){
-    var item=el("div",{"class":"item"});
-    item.appendChild(txt("p",{id:"t-"+t.id},t.text));
-    if(t.type==="yn") item.appendChild(seg(t.id,[["kyllä","Kyllä"],["ei","Ei"]],"yn",t.text,"t-"+t.id));
-    else item.appendChild(seg(t.id,[["0","0"],["1","1"],["2","2"],["3","3+"]],"camps",t.text,"t-"+t.id));
-    tr.appendChild(item);
+    var item = el("div", {"class":"item"});
+    item.appendChild(el("p", {id:"t-"+t.id}, t.text));
+    if(t.hint) item.appendChild(el("p", {"class":"hint"}, t.hint));
+    if(t.type === "num") item.appendChild(el("input", {type:"number", min:"0", step:"1", inputmode:"numeric", id:"in-"+t.id, "data-key":t.id, "aria-labelledby":"t-"+t.id, "class":"num"}));
+    else item.appendChild(seg(t.id, t.type === "yn" ? YN : CAMPS, t.type, t.text, "t-"+t.id));
+    trFrag.appendChild(item);
   });
+  $("training").appendChild(trFrag);
 
   /* ---------- Osiot ---------- */
-  var root=document.getElementById("groups");
+  var gFrag = document.createDocumentFragment(), avgEls = {}, barEls = {};
   GROUPS.forEach(function(g){
-    var sec=el("section",{"class":"group","aria-labelledby":"g-"+g.id});
-    var head=el("div",{"class":"ghead"});
-    head.appendChild(txt("h3",{id:"g-"+g.id},g.title));
-    head.appendChild(el("span",{"class":"avg"},'Keskiarvo <strong id="avg-'+g.id+'">–</strong>'));
+    var sec = el("section", {"class":"group", "aria-labelledby":"g-"+g.id});
+    var head = el("div", {"class":"ghead"}), avg = el("span", {"class":"avg"}, "Keskiarvo ");
+    avgEls[g.id] = el("strong", null, "–"); avg.appendChild(avgEls[g.id]);
+    head.appendChild(el("h3", {id:"g-"+g.id}, g.title)); head.appendChild(avg);
     sec.appendChild(head);
-    if(g.desc) sec.appendChild(txt("p",{"class":"gdesc"},g.desc));
-    var sc = g.freq? FREQ : SCALE;
-    g.items.forEach(function(it,i){ sec.appendChild(ratingItem(g.id+"-"+i, it[0], it[1], sc)); });
-    if(g.katas){
-      sec.appendChild(txt("h4",{"class":"subhead"},"Vaaditut katat"));
-      sec.appendChild(txt("p",{"class":"gdesc"},"Vyökokeessa edellytetään myös kaikkien aiempien katojen hallintaa. Arvioi, kuinka varmasti hallitset kunkin katan ilman muistivirheitä."));
-      sec.appendChild(el("div",{id:"katalist"}));
+    if(g.desc) sec.appendChild(el("p", {"class":"gdesc"}, g.desc));
+    var sc = g.freq ? FREQ : SCALE;
+    g.items.forEach(function(it){ sec.appendChild(ratingItem(it.key, it.topic, it.text, sc)); });
+    if(g.kunto){
+      sec.appendChild(el("h4", {"class":"subhead"}, "Kuntotesti"));
+      sec.appendChild(el("p", {"class":"gdesc"}, "Katso tuloksesi kuntotestisovelluksesta. Jos et ole vielä tehnyt kuntotestiä, tee kuntotesti ensin."));
+      sec.appendChild(textField("kt1", "Missä kuntotestin osa-alueissa olen vahvimmillani tai paransin tulostani?"));
+      sec.appendChild(textField("kt2", "Mitä ominaisuutta minun kannattaa kuntotestin perusteella kehittää eniten?"));
     }
-    var n=el("div",{"class":"notes"});
-    n.appendChild(txt("label",{"for":"huom-"+g.id},"Muistiinpanot"));
-    n.appendChild(el("textarea",{id:"huom-"+g.id,"data-key":"huom-"+g.id}));
+    if(g.katas){
+      sec.appendChild(el("h4", {"class":"subhead"}, "Vaaditut katat"));
+      sec.appendChild(el("p", {"class":"gdesc"}, "Vyökokeessa edellytetään myös kaikkien aiempien katojen hallintaa. Arvioi, kuinka varmasti hallitset kunkin katan ilman muistivirheitä."));
+      sec.appendChild(el("div", {id:"katalist"}));
+    }
+    var n = el("div", {"class":"notes"});
+    n.appendChild(el("label", {"for":"huom-"+g.id}, "Muistiinpanot"));
+    n.appendChild(el("textarea", {id:"huom-"+g.id, "data-key":"huom-"+g.id}));
     sec.appendChild(n);
-    root.appendChild(sec);
+    gFrag.appendChild(sec);
+
+    var row = el("div", {"class":"bar"}), trk = el("div", {"class":"track"}), fill = el("i"), val = el("b", null, "–");
+    row.appendChild(el("span", {"class":"name"}, g.title.replace(/^\d+\.\s*/, "")));
+    trk.appendChild(fill); row.appendChild(trk); row.appendChild(val);
+    $("bars").appendChild(row);
+    barEls[g.id] = {fill:fill, val:val};
   });
+  $("groups").appendChild(gFrag);
 
   function renderKatas(){
-    var body=document.getElementById("katalist"); body.innerHTML="";
-    var ks=requiredKatas();
-    if(!ks.length){ body.appendChild(txt("div",{"class":"empty"},"Valitse perustiedoista vyökoe, niin vaaditut katat näkyvät tässä.")); return; }
+    var body = $("katalist"), ks = requiredKatas(), frag = document.createDocumentFragment();
+    body.textContent = "";
+    if(!ks.length){ body.appendChild(el("div", {"class":"empty"}, "Valitse perustiedoista vyökoe, niin vaaditut katat näkyvät tässä.")); return; }
     ks.forEach(function(k){
-      var extra=document.createDocumentFragment();
-      if(k.isNew) extra.appendChild(txt("span",{"class":"tag"},"Uusi kata"));
-      else extra.appendChild(txt("span",{"class":"grade"},k.grade));
-      var item=ratingItem("kata:"+k.name, null, k.name, SCALE, extra);
-      item.querySelector("p").style.fontWeight="700";
-      body.appendChild(item);
+      var extra = k.isNew ? el("span", {"class":"tag"}, "Uusi kata") : el("span", {"class":"grade"}, k.grade);
+      var item = ratingItem(k.key, null, k.name, SCALE, extra);
+      item.firstChild.style.fontWeight = "700";
+      frag.appendChild(item);
     });
+    body.appendChild(frag);
   }
 
-  /* ---------- Palautus ---------- */
+  /* ---------- Tekstikenttien palautus ---------- */
   document.querySelectorAll("[data-key]").forEach(function(f){
-    var k=f.getAttribute("data-key");
-    if(state.text[k]) f.value=state.text[k];
-    if(k==="pvm" && !f.value){ try{ f.value=new Date().toISOString().slice(0,10); }catch(e){} }
+    var k = f.getAttribute("data-key");
+    if(state.text[k] != null) f.value = state.text[k];
   });
-  if(state.taso){ var t=document.querySelector('input[name="taso"][value="'+state.taso+'"]'); if(t) t.checked=true; }
+  if(!$("pvm").value){ $("pvm").value = today(); state.text.pvm = $("pvm").value; }
   renderKatas();
 
-  /* ---------- Laskenta ---------- */
-  function avg(a){ return a.length? a.reduce(function(x,y){return x+y;},0)/a.length : null; }
-  function fmt(n){ return n==null? "–" : n.toFixed(1).replace(".",","); }
+  /* ---------- Laskenta ja yhteenveto ---------- */
+  function avgOf(a){ return a.length ? a.reduce(function(x,y){ return x+y; }, 0) / a.length : null; }
+  function fmt(n){ return n == null ? "–" : n.toFixed(1).replace(".", ","); }
   function groupItems(g){
-    var out=g.items.map(function(it,i){ return {key:g.id+"-"+i, label:it[0]+": "+it[1]}; });
-    if(g.katas) requiredKatas().forEach(function(k){ out.push({key:"kata:"+k.name, label:"Kata "+k.name}); });
+    var out = g.items.map(function(it){ return {key:it.key, label:it.topic + ": " + it.text}; });
+    if(g.katas) requiredKatas().forEach(function(k){ out.push({key:k.key, label:"Kata " + k.name}); });
     return out;
   }
+  function trValue(t){
+    var v = t.type === "num" ? (state.text[t.id] || null) : state.ratings[t.id];
+    if(v == null || v === "") return null;
+    return t.type === "camps" && v === "3" ? "3 tai enemmän" : String(v);
+  }
+  function fillList(id, arr, emptyMsg){
+    var ul = $(id); ul.textContent = "";
+    if(!arr.length){ ul.appendChild(el("li", null, emptyMsg)); return; }
+    arr.forEach(function(x){ ul.appendChild(el("li", null, x.t + " (" + x.v + ")")); });
+  }
+
   function update(){
-    document.getElementById("danBlock").classList.toggle("hidden", state.taso!=="1d");
-    var bars=document.getElementById("bars"); bars.innerHTML="";
-    var gav=[], skill=[], answered=0, total=0;
+    var danWasHidden = $("danBlock").classList.contains("hidden");
+    $("danBlock").classList.toggle("hidden", state.taso !== "1d");
+    if(danWasHidden && state.taso === "1d") grow($("p5"));
+    var skill = [], answered = 0, total = 0;
     GROUPS.forEach(function(g){
-      var vals=[];
-      groupItems(g).forEach(function(it){ total++; var v=state.ratings[it.key]; if(v!=null){ v=+v; vals.push(v); answered++; if(!g.freq) skill.push({t:it.label, v:v}); } });
-      var a=avg(vals);
-      document.getElementById("avg-"+g.id).textContent=fmt(a);
-      if(a!=null && !g.freq) gav.push(a);
-      var row=el("div",{"class":"bar"});
-      row.appendChild(txt("span",{"class":"name"},g.title.replace(/^\d+\.\s*/,"")));
-      var trk=el("div",{"class":"track"}), fill=el("i"); fill.style.width=a==null?"0":((a/5)*100)+"%"; trk.appendChild(fill); row.appendChild(trk);
-      row.appendChild(txt("b",null,fmt(a)));
-      bars.appendChild(row);
+      var vals = [];
+      groupItems(g).forEach(function(it){
+        total++;
+        var v = state.ratings[it.key];
+        if(v != null){ vals.push(v); answered++; if(!g.freq) skill.push({t:it.label, v:v}); }
+      });
+      var a = avgOf(vals);
+      avgEls[g.id].textContent = fmt(a);
+      barEls[g.id].fill.style.width = a == null ? "0" : (a / 5 * 100) + "%";
+      barEls[g.id].val.textContent = fmt(a);
     });
-    document.getElementById("ovr").textContent=fmt(avg(gav));
-    function list(id, arr){ var ul=document.getElementById(id); ul.innerHTML=""; if(!arr.length){ ul.appendChild(txt("li",null,"Ei vielä tarpeeksi vastauksia")); return; } arr.forEach(function(x){ ul.appendChild(txt("li",null,x.t+" ("+x.v+")")); }); }
-    if(skill.length>=6){
-      var s=skill.slice().sort(function(a,b){return b.v-a.v;});
-      list("top", s.slice(0,3).filter(function(x){return x.v>=3;}));
-      list("low", s.slice(-3).reverse().filter(function(x){return x.v<=3;}));
-    } else { list("top",[]); list("low",[]); }
-    var tul=document.getElementById("trsum"); tul.innerHTML="";
-    TRAINING.forEach(function(t){
-      var v=state.ratings[t.id];
-      var shown = v==null? "ei vastattu" : (t.type==="camps"? (v==="3"?"3 tai enemmän":v) : v);
-      tul.appendChild(txt("li",null,t.text.replace(/[?.]$/,"")+": "+shown));
-    });
-    document.getElementById("prog").textContent="Arvioitu "+answered+" / "+total+" väittämää.";
+    if(skill.length >= 6){
+      var s = skill.slice().sort(function(a,b){ return b.v - a.v; });
+      fillList("top", s.slice(0,3).filter(function(x){ return x.v >= 3; }), "Ei vielä kohtia tasolla 3 tai yli");
+      fillList("low", s.slice(-3).reverse().filter(function(x){ return x.v <= 3; }), "Kaikki arvioidut kohdat ovat tasolla 4 tai yli");
+    } else {
+      fillList("top", [], "Arvioi vähintään kuusi kohtaa");
+      fillList("low", [], "Arvioi vähintään kuusi kohtaa");
+    }
+    var tul = $("trsum"); tul.textContent = "";
+    TRAINING.forEach(function(t){ var v = trValue(t); tul.appendChild(el("li", null, t.text.replace(/[?.]$/, "") + ": " + (v == null ? "ei vastattu" : v))); });
+    $("prog").textContent = "Arvioitu " + answered + " / " + total + " väittämää.";
   }
 
   /* ---------- Tapahtumat ---------- */
+  function setRating(name, value){
+    if(value == null) delete state.ratings[name];
+    else state.ratings[name] = /^tr/.test(name) ? value : parseInt(value, 10);
+  }
   document.addEventListener("change", function(e){
-    var t=e.target;
-    if(t.name==="taso"){ state.taso=t.value; renderKatas(); }
-    else if(t.type==="radio"){ state.ratings[t.name]= /^tr/.test(t.name)? t.value : parseInt(t.value,10); }
+    var t = e.target;
+    if(t.type !== "radio") return;
+    if(t.name === "taso"){ state.taso = t.value; renderKatas(); }
+    else setRating(t.name, t.value);
     save(); update();
   });
   document.addEventListener("input", function(e){
-    var k=e.target.getAttribute && e.target.getAttribute("data-key");
-    if(k){ state.text[k]=e.target.value; save(); }
+    var t = e.target, k = t.getAttribute && t.getAttribute("data-key");
+    if(!k) return;
+    if(t.type === "number" && t.value !== "" && +t.value < 0) t.value = "";
+    state.text[k] = t.value;
+    if(t.tagName === "TEXTAREA") grow(t);
+    save();
+    if(/^tr/.test(k)) update();
   });
-  function status(msg){ var s=document.getElementById("status"); s.textContent=msg; clearTimeout(status.t); status.t=setTimeout(function(){s.textContent="";},4000); }
-  document.getElementById("printBtn").addEventListener("click", function(){ window.print(); });
 
-  document.getElementById("copyBtn").addEventListener("click", function(){
-    var L=[], tx=state.text, gi=gradeIndex(state.taso);
+  /* Valitun arvon uusi napautus poistaa valinnan, jotta kohdan voi jättää tyhjäksi. */
+  var pressed = null;
+  document.addEventListener("pointerdown", function(e){
+    var lab = e.target.closest && e.target.closest(".seg label");
+    var inp = lab && lab.querySelector("input");
+    pressed = inp && inp.checked ? inp : null;
+  });
+  document.addEventListener("click", function(e){
+    var t = e.target;
+    if(t.type === "radio" && t === pressed){
+      t.checked = false; pressed = null;
+      setRating(t.name, null); save(); update();
+    }
+  });
+
+  function status(msg){ var s = $("status"); s.textContent = msg; clearTimeout(status.t); status.t = setTimeout(function(){ s.textContent = ""; }, 4000); }
+  window.addEventListener("beforeprint", growAll);
+  $("printBtn").addEventListener("click", function(){ saveNow(); growAll(); window.print(); });
+
+  $("copyBtn").addEventListener("click", function(){
+    var L = [], tx = state.text, gi = gradeIndex(state.taso);
     L.push("Budo Akatemia – karaten itsearviointi");
-    L.push("Nimi: "+(tx.nimi||"")); L.push("Päivämäärä: "+(tx.pvm||""));
-    L.push("Vyökoe: "+(gi>=0?GRADES[gi].label:""));
+    L.push("Nimi: " + (tx.nimi || "")); L.push("Päivämäärä: " + (tx.pvm || ""));
+    L.push("Vyökoe: " + (gi >= 0 ? GRADES[gi].label : ""));
     L.push(""); L.push("1. Harjoitteluaktiivisuus");
-    TRAINING.forEach(function(t){ var v=state.ratings[t.id]; L.push("  "+(v==null?"-":(t.type==="camps"&&v==="3"?"3+":v))+"  "+t.text); });
-    if(tx["huom-tr"]) L.push("  Muistiinpanot: "+tx["huom-tr"]);
+    TRAINING.forEach(function(t){ var v = trValue(t); L.push("  " + (v == null ? "-" : v) + "  " + t.text); });
+    if(tx["huom-tr"]) L.push("  Muistiinpanot: " + tx["huom-tr"]);
     GROUPS.forEach(function(g){
-      L.push(""); L.push(g.title+" (keskiarvo "+document.getElementById("avg-"+g.id).textContent+")");
-      groupItems(g).forEach(function(it){ var v=state.ratings[it.key]; L.push("  "+(v==null?"-":v)+"  "+it.label); });
-      if(tx["huom-"+g.id]) L.push("  Muistiinpanot: "+tx["huom-"+g.id]);
+      L.push(""); L.push(g.title + " (keskiarvo " + avgEls[g.id].textContent + ")");
+      groupItems(g).forEach(function(it){ var v = state.ratings[it.key]; L.push("  " + (v == null ? "-" : v) + "  " + it.label); });
+      if(g.kunto){ L.push("  Kuntotestin vahvuudet ja parannukset: " + (tx.kt1 || "")); L.push("  Kehitettävä ominaisuus: " + (tx.kt2 || "")); }
+      if(tx["huom-"+g.id]) L.push("  Muistiinpanot: " + tx["huom-"+g.id]);
     });
-    L.push(""); L.push("Osioiden 2–8 keskiarvo: "+document.getElementById("ovr").textContent);
-    var Q=[["p3a","Tekninen tavoite"],["p3b","Fyysinen tavoite"],["p3c","Tavoite seurayhteisön jäsenenä"],["p1","Vahvimmat osa-alueet"],["p2","Tärkeimmät kehityskohteet"],["p4","Dojo kun ja karate-don periaatteet"]];
-    if(state.taso==="1d") Q.push(["p5","Mitä musta vyö minulle tarkoittaa"]);
-    L.push(""); Q.forEach(function(q){ L.push(q[1]+": "+(tx[q[0]]||"")); });
-    var text=L.join("\n");
-    function fallback(){ var ta=document.createElement("textarea"); ta.value=text; ta.style.position="fixed"; ta.style.opacity="0"; document.body.appendChild(ta); ta.select(); var ok=false; try{ ok=document.execCommand("copy"); }catch(e){} document.body.removeChild(ta); status(ok?"Kopioitu leikepöydälle.":"Kopiointi ei onnistunut. Käytä tulostusta."); }
-    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(function(){status("Kopioitu leikepöydälle.");},fallback); } else fallback();
+    var Q = [["p3a","Tekninen tavoite"],["p3b","Fyysinen tavoite"],["p3c","Tavoite seurayhteisön jäsenenä"],["p3d","Ensimmäinen konkreettinen toimenpide"],["p0","Mitä olen oppinut nykyisellä vyöarvollani"],["p1","Vahvimmat osa-alueet"]];
+    if(state.taso === "1d") Q.push(["p5","Mitä musta vyö minulle tarkoittaa"]);
+    L.push(""); Q.forEach(function(q){ L.push(q[1] + ": " + (tx[q[0]] || "")); });
+    var text = L.join("\n");
+    function fallback(){
+      var ta = el("textarea"); ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      var ok = false; try{ ok = document.execCommand("copy"); }catch(e){}
+      document.body.removeChild(ta);
+      status(ok ? "Kopioitu leikepöydälle." : "Kopiointi ei onnistunut. Käytä tulostusta.");
+    }
+    if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function(){ status("Kopioitu leikepöydälle."); }, fallback);
+    else fallback();
   });
 
-  document.getElementById("resetBtn").addEventListener("click", function(){
+  $("resetBtn").addEventListener("click", function(){
     if(!confirm("Tyhjennetäänkö kaikki vastaukset?")) return;
-    state={ratings:{},text:{},taso:""};
+    state = {ratings:{}, text:{}, taso:""};
+    clearTimeout(saveTimer); saveTimer = null;
     try{ localStorage.removeItem(KEY); }catch(e){}
-    document.querySelectorAll("input[type=radio]").forEach(function(r){r.checked=false;});
-    document.querySelectorAll("[data-key]").forEach(function(f){f.value="";});
-    renderKatas(); update(); status("Lomake tyhjennetty.");
+    document.querySelectorAll("input[type=radio]").forEach(function(r){ r.checked = false; });
+    document.querySelectorAll("[data-key]").forEach(function(f){ f.value = ""; });
+    $("pvm").value = today(); state.text.pvm = $("pvm").value;
+    renderKatas(); update(); growAll(); status("Lomake tyhjennetty.");
   });
 
   update();
+  requestAnimationFrame(growAll);
 })();
 </script>
 </body>
